@@ -1,51 +1,57 @@
-// do not import Barba like this if you load the library through the browser
-import barba from '@barba/core';
+/* =================
+author: Karan Mhatre
+email: me@karanmhatre.com
+website: karanmhatre.com
+  
+================= */
 
-// basic default transition (with no rules and minimal hooks)
-barba.init({
-    transitions: [{
-        leave({ current, next, trigger }) {
-            // do something with `current.container` for your leave transition
-            // then return a promise or use `this.async()`
-        },
-        enter({ current, next, trigger }) {
-            // do something with `next.container` for your enter transition
-            // then return a promise or use `this.async()`
-        }
-    }]
-});
+// Function to add and remove the page transition screen
+function pageTransition() {
 
-// dummy example to illustrate rules and hooks
-barba.init({
-    transitions: [{
-        name: 'dummy-transition',
+    var tl = gsap.timeline();
+    tl.set('.loading-screen', { transformOrigin: "bottom left" });
+    tl.to('.loading-screen', { duration: .5, scaleY: 1 });
+    tl.to('.loading-screen', { duration: .5, scaleY: 0, skewX: 0, transformOrigin: "top left", ease: "power1.out", delay: 1 });
+}
 
-        // apply only when leaving `[data-barba-namespace="home"]`
-        from: 'home',
+// Function to animate the content of each page
+function contentAnimation() {
 
-        // apply only when transitioning to `[data-barba-namespace="products | contact"]`
-        to: {
-            namespace: [
-                'products',
-                'contact'
-            ]
-        },
+    var tl = gsap.timeline();
+    tl.from('.is-animated', { duration: .5, translateY: 10, opacity: 0, stagger: 0.4 });
+    tl.from('.main-navigation', { duration: .5, translateY: -10, opacity: 0 });
 
-        // apply only if clicked link contains `.cta`
-        custom: ({ current, next, trigger }) => trigger.classList && trigger.classList.contains('cta'),
+    $('.green-heading-bg').addClass('show');
 
-        // do leave and enter concurrently
+}
+
+$(function() {
+
+    barba.init({
+
         sync: true,
 
-        // available hooks…
-        beforeOnce() {},
-        once() {},
-        afterOnce() {},
-        beforeLeave() {},
-        leave() {},
-        afterLeave() {},
-        beforeEnter() {},
-        enter() {},
-        afterEnter() {}
-    }]
+        transitions: [{
+
+            async leave(data) {
+
+                const done = this.async();
+
+                pageTransition();
+                await delay(1000);
+                done();
+
+            },
+
+            async enter(data) {
+                contentAnimation();
+            },
+
+            async once(data) {
+                contentAnimation();
+            }
+
+        }]
+    });
+
 });
