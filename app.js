@@ -38,7 +38,7 @@ $(function() {
                 const done = this.async();
 
                 pageTransition();
-                await delay();
+                await delay(200);
                 done();
 
             },
