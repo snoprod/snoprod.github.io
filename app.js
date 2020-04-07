@@ -38,7 +38,8 @@ $(function() {
                 const done = this.async();
 
                 pageTransition();
-                done();
+                timeout: 2000,
+                    done();
 
             },
 
