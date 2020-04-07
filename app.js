@@ -38,8 +38,8 @@ $(function() {
                 const done = this.async();
 
                 pageTransition();
-                timeout: 2000,
-                    done();
+                await delay(200);
+                done();
 
             },
 
